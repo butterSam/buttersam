@@ -1,0 +1,48 @@
+<html>
+<head>
+<script type="text/javascript" src='http://code.jquery.com/jquery-latest.min.js'></script>
+<script>
+var username = "";
+var page=1;
+function load(e) {
+	document.getElementById("result").innerHTML = "";
+    username = document.getElementById("user").value;
+    document.getElementById("load").innerHTML = "Loading...";
+	$.get( "http://scratch.mit.edu/users/" + username + "/followers/?page=1", loaded );
+}
+function loaded( data ) {
+	var $dom = $( data );
+	document.getElementById("load").innerHTML = "";
+	var $users = $dom.find('span.title').children();
+	var $out = $('#result');
+
+	for (var i=0; i<$users.length; i++) {
+		var user = $users[i].text.trim();
+		$out.prepend( user+'<br>' );
+	}
+	page++;
+	$.get( "http://scratch.mit.edu/users/" + username + "/followers/?page="+page, loaded );
+	$out.prepend( 'Followers: <br> <br>' );
+};
+function copy() {
+  //document.getElementById("user").value = followers;
+  document.getElementById("result").select();
+  document.execCommand("copy");
+  document.getElementById("user").value = username;
+}
+</script>
+</head>
+<body style = "background-color: black;">
+<p style = "font-family: courier new; color: lime; font-size: 15px">By griffpatch & frogggeee_test</p>
+<p style = "font-family: courier new; color: lime;">instructions: type your username into the box and press "Go".</p>
+<p style = "font-family: courier new; color: lime;">Username: </p>
+<input id = "user" placeholder = "username" style = "font-family: courier new; color: black;"></input>
+<button type = "button" onclick= "load(event);" style = "font-family: courier new; color: black; background-color: white;">Go</button>
+<br>
+<br>
+<!<button onclick = "copy()"style = "font-family: courier new; color: black; background-color: white;">copy followers list</button>
+<br>
+<div id = "load" style = "font-family: courier new; color: lime;"></div>
+<div id='result' style = "font-family: courier new; color: lime;"></div>
+</body>
+</html>
